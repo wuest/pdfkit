@@ -1,6 +1,7 @@
-2014-08-xx
+2015-04-xx
 =================
   * Bump to 0.7.0
+  * Drop support for Ruby 1.9.2. No breaking changes in this release, however.
   * Fix issue #230 where PDFKit called `bundle exec` without a Gemfile
   * Fix issue #183 where PDFKit broke the path to wkhtmltopdf.exe by escaping
     spaces in paths
