@@ -23,6 +23,27 @@ describe PDFKit do
       expect(pdfkit.source.to_s).to eq(file_path)
     end
 
+    # Stylesheets
+    it "has no stylesheet by default" do
+      pdfkit = PDFKit.new('<h1>Oh Hai</h1>')
+      expect(pdfkit.stylesheets).to be_empty
+    end
+
+    it "does not prepend cover with --" do
+      pdfkit = PDFKit.new('html', "cover" => 'http://google.com')
+      expect(pdfkit.options).to have_key('cover')
+    end
+
+    it "does not prepend toc with --" do
+      pdfkit = PDFKit.new('html', 'toc' => '')
+      expect(pdfkit.options).to have_key('toc')
+    end
+
+    it "handles special params passed as symbols" do
+      pdfkit = PDFKit.new('html', {toc: true})
+      expect(pdfkit.options).to have_key('toc')
+    end
+
     # Options
     ## options keys
     it "drops options without values" do
@@ -108,25 +129,6 @@ describe PDFKit do
       expect(pdfkit.options['--encoding']).to eq('UTF-8')
     end
 
-    # Stylesheets
-    it "has no stylesheet by default" do
-      pdfkit = PDFKit.new('<h1>Oh Hai</h1>')
-      expect(pdfkit.stylesheets).to be_empty
-    end
-
-    it "should not prepend cover with --" do
-      pdfkit = PDFKit.new('html', "cover" => 'http://google.com')
-      expect(pdfkit.options).to have_key('cover')
-    end
-
-    it "should not prepend toc with --" do
-      pdfkit = PDFKit.new('html', 'toc' => '')
-      expect(pdfkit.options).to have_key('toc')
-    end
-
-    it "should handle special params passed as symbols" do
-      pdfkit = PDFKit.new('html', {toc: true})
-      expect(pdfkit.options).to have_key('toc')
     end
   end
 
