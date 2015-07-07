@@ -33,16 +33,16 @@ class PDFKit
 
   def command(path = nil)
     args = @options.to_a.flatten.compact
+    shell_escaped_command = [executable, args.shelljoin].join ' '
 
-    if @source.html?
-      args << '-' # Get HTML from stdin
-    else
-      args << @source.to_s
-    end
+    # In order to allow for URL parameters (e.g. https://www.google.com/search?q=pdfkit) we do
+    # not escape the source. The user is responsible for ensuring that no vulnerabilities exist
+    # in the source. Please see https://github.com/pdfkit/pdfkit/issues/164.
+    # HTML source will come from stdin
+    input_for_command = @source.html? ? '-' : @source.to_s
+    output_for_command = path ? Shellwords.shellescape(path) : '-'
 
-    args << (path || '-') # Write to file or stdout
-
-    [executable, args.shelljoin].join ' '
+    "#{shell_escaped_command} #{input_for_command} #{output_for_command}"
   end
 
   def executable

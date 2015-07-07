@@ -184,6 +184,12 @@ describe PDFKit do
       expect(pdfkit.command).not_to include('Program\ Files')
     end
 
+    it "does not shell escape source URLs" do
+      pdfkit = PDFKit.new('https://www.google.com/search?q=pdfkit')
+      # Shelljoin results in https://www.google.com/search\\?q\\=pdfkit
+      expect(pdfkit.command).to include "https://www.google.com/search?q=pdfkit"
+    end
+
     it "should setup multiple cookies when passed a hash" do
       pdfkit = PDFKit.new('html', :cookie => {:cookie_name1 => :cookie_val1, :cookie_name2 => :cookie_val2})
       command = pdfkit.command
