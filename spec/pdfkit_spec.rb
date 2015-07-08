@@ -237,7 +237,7 @@ describe PDFKit do
 
     it "specify the URL to the source if it is a url" do
       pdfkit = PDFKit.new('http://google.com')
-      expect(pdfkit.command).to match /http:\/\/google.com -$/
+      expect(pdfkit.command).to match /"http:\/\/google.com" -/
     end
 
     it "should specify the path to the source if it is a file" do
@@ -517,5 +517,15 @@ describe PDFKit do
       pdfkit.to_pdf
       expect(File.exist?(@test_path)).to eq(false)
     end
+
+    it "can handle ampersands in URLs" do
+      pdfkit = PDFKit.new('https://www.google.com/search?q=pdfkit')
+      pdf = pdfkit.to_pdf
+      expect(pdf[0...4]).to eq("%PDF") # PDF Signature at the beginning
+
+      pdfkit = PDFKit.new('https://www.google.com/search?q=pdfkit&sort=ASC')
+      pdf = pdfkit.to_pdf
+      expect(pdf[0...4]).to eq("%PDF") # PDF Signature at the beginning
+   end
   end
 end

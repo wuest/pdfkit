@@ -36,7 +36,7 @@ class PDFKit
 
     def shell_safe_url
       return unless url?
-      url_needs_escaping? ? URI::escape(@source) : @source
+      %{"#{url_needs_escaping? ? URI::escape(@source) : @source}"}
     end
 
     def url_needs_escaping?
